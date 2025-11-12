@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// O "api" agora aponta para o seu servidor no Render,
-// e não mais para o 'localhost:3000'
+// O "api" agora aponta para a URL base CORRETA,
+// incluindo o /api
 const api = axios.create({
-  baseURL: 'https://lex-api.onrender.com' 
+  baseURL: 'https://lex-api.onrender.com/api' 
 });
 
 // O interceptor de token continua igual
@@ -19,6 +19,5 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 
 export default api;
