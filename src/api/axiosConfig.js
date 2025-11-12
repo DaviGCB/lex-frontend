@@ -1,18 +1,15 @@
 import axios from 'axios';
 
-// 1. Cria uma "instância" do Axios com a URL base da sua API
+// O "api" agora aponta para o seu servidor no Render,
+// e não mais para o 'localhost:3000'
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api'
+  baseURL: 'https://lex-api.onrender.com' 
 });
 
-// 2. O "Interceptor" (O SUPERPODER)
-// Isso intercepta CADA requisição antes de ela ser enviada
+// O interceptor de token continua igual
 api.interceptors.request.use(
   (config) => {
-    // 3. Pega o token do "porta-luvas" (localStorage)
     const token = localStorage.getItem('lex-token');
-    
-    // 4. Se o token existir, anexa ele no cabeçalho
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
