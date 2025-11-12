@@ -1,40 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import './LoginPage.css'; // Vamos criar este CSS
-import logo from '../assets/logo-lex.jpeg'; // Vamos adicionar o logo
+import api from '../api/axiosConfig'; // <-- 1. MUDANÇA: Importa nosso 'api'
+import './LoginPage.css';
+import logo from '../assets/logo-lex.jpeg'; // Verifique se é .jpeg ou .png
 
 function LoginPage() {
-  // 1. Estados para guardar os dados do formulário
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
   
-  // 2. Hook de navegação para mudar de página
   const navigate = useNavigate();
 
-  // 3. Função chamada quando o formulário é enviado
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Impede o recarregamento da página
-    setError(''); // Limpa erros antigos
+    e.preventDefault();
+    setError('');
 
     try {
-      // 4. FAZ A CHAMADA DE API (o "pedido" para a "cozinha")
-      const response = await axios.post('http://localhost:3000/api/usuarios/login', {
+      // 2. MUDANÇA: Usa 'api.post' e só o final da URL
+      const response = await api.post('/usuarios/login', {
         email: email,
         senha: senha,
       });
 
-      // 5. Se deu certo:
-      // Pega o "crachá" (token) e guarda no "porta-luvas" do navegador
       const token = response.data.token;
       localStorage.setItem('lex-token', token);
       
-      // 6. Navega o usuário para a página de Dashboard
       navigate('/dashboard');
 
     } catch (err) {
-      // 7. Se deu errado:
       console.error('Falha no login:', err);
       setError('Credenciais inválidas. Tente novamente.');
     }
@@ -65,7 +58,6 @@ function LoginPage() {
           />
         </div>
 
-        {/* Mostra a mensagem de erro, se houver */}
         {error && <p className="error-message">{error}</p>}
 
         <button type="submit" className="btn-primary">Entrar</button>

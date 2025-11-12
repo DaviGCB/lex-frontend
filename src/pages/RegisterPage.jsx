@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import './RegisterPage.css'; // Vamos criar este CSS
-import logo from '../assets/logo-lex.jpeg';
+import api from '../api/axiosConfig'; // <-- 1. MUDANÇA: Importa nosso 'api'
+import './RegisterPage.css';
+import logo from '../assets/logo-lex.jpeg'; // Verifique se é .jpeg ou .png
 
 function RegisterPage() {
-  // Estados para os campos do formulário
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -18,29 +17,26 @@ function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    // 1. Validação de senha no front-end
     if (senha !== confirmarSenha) {
       setError('As senhas não coincidem.');
       return;
     }
 
     try {
-      // 2. Chamada para a API de registro
-      await axios.post('http://localhost:3000/api/usuarios/registrar', {
+      // 2. MUDANÇA: Usa 'api.post' e só o final da URL
+      await api.post('/usuarios/registrar', {
         nome_completo: nome,
         email: email,
         senha: senha,
       });
 
-      // 3. Sucesso! Redireciona para o login
       alert('Cadastro realizado com sucesso! Faça o login.');
       navigate('/login');
 
     } catch (err) {
-      // 4. Tratamento de erro (ex: e-mail duplicado)
       console.error('Falha no cadastro:', err);
       if (err.response && err.response.data.error) {
-        setError(err.response.data.error); // "Este e-mail já está cadastrado."
+        setError(err.response.data.error);
       } else {
         setError('Erro ao se cadastrar. Tente novamente.');
       }
